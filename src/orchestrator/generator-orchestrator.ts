@@ -58,15 +58,15 @@ export class GeneratorOrchestrator {
 
 	async generate(): Promise<UnifiedGenerationResult> {
 		const startTime = Date.now()
-		if (this.outputFormat === OutputFormat.TYPE_GRAPHQL) {
-			return this.generateTypeGraphQL(startTime)
+		if (this.outputFormat === OutputFormat.TYPE_GRAPHQL || this.outputFormat === OutputFormat.NESTJS) {
+			return this.generateTypeScriptGraphQL(startTime)
 		} else {
 			return this.generateGraphQL(startTime)
 		}
 	}
 
-	private async generateTypeGraphQL(startTime: number): Promise<UnifiedGenerationResult> {
-		const unifiedContext = UnifiedContextFactory.createTypeScriptContext(this.context)
+	private async generateTypeScriptGraphQL(startTime: number): Promise<UnifiedGenerationResult> {
+		const unifiedContext = UnifiedContextFactory.createTypeScriptContext(this.context, this.outputFormat)
 		const generators = this.createTypeScriptGeneratorsWithContext(unifiedContext)
 		const results = await this.executeGenerators(generators)
 
@@ -88,8 +88,8 @@ export class GeneratorOrchestrator {
 			filterInputGenerator: new UnifiedFilterInputGenerator(unifiedContext),
 			connectionGenerator: new UnifiedConnectionGenerator(unifiedContext),
 			objectTypeGenerator: new UnifiedObjectTypeGenerator(unifiedContext),
-			enumGenerator: new UnifiedEnumGenerator(unifiedContext, OutputFormat.TYPE_GRAPHQL),
-			scalarGenerator: new UnifiedScalarGenerator(this.context, OutputFormat.TYPE_GRAPHQL),
+			enumGenerator: new UnifiedEnumGenerator(unifiedContext, this.outputFormat),
+			scalarGenerator: new UnifiedScalarGenerator(this.context, this.outputFormat),
 			relationGenerator: new UnifiedRelationGenerator(unifiedContext),
 			inputGenerator: new UnifiedInputGenerator(unifiedContext),
 			queryArgsGenerator: new UnifiedQueryArgsGenerator(unifiedContext),
@@ -104,7 +104,7 @@ export class GeneratorOrchestrator {
 
 		this.ensureEssentialTypes(graphqlContext)
 
-		const generators = UnifiedGeneratorFactory.createGraphQLGenerators(graphqlContext)
+		const generators = UnifiedGeneratorFactory.createGraphQLGenerators(graphqlContext, this.outputFormat)
 		const results = await this.executeGenerators(generators)
 
 		const warnings = graphqlContext.registry.validateSchema()
@@ -175,7 +175,7 @@ export class GeneratorOrchestrator {
 
 	private async executeGenerators(generators: TypeScriptGenerators | GraphQLGenerators): Promise<GenerationResult[]> {
 		const results: GenerationResult[] = []
-		const isTypeScript = this.outputFormat === OutputFormat.TYPE_GRAPHQL
+		const isTypeScript = this.outputFormat === OutputFormat.TYPE_GRAPHQL || this.outputFormat === OutputFormat.NESTJS
 
 		if (this.context.options.generateScalars && generators.scalarGenerator) {
 			const scalarResult = generators.scalarGenerator.generate()

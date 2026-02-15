@@ -32,7 +32,7 @@ export class UnifiedScalarGenerator {
 	private schemaComposer?: SchemaComposer<unknown>
 	private options: BaseGeneratorContext['options']
 
-	constructor(context: BaseGeneratorContext, format: OutputFormat = OutputFormat.GRAPHQL) {
+	constructor(context: BaseGeneratorContext, format: OutputFormat) {
 		this.format = format
 		this.options = context.options
 		this.typeFormatter = new TypeFormatter(context.options.typeNaming, context.options.fieldNaming)
@@ -42,8 +42,8 @@ export class UnifiedScalarGenerator {
 			this.schemaComposer = (context as any).registry?.schemaComposer
 		}
 
-		if (format === OutputFormat.TYPE_GRAPHQL) {
-			this.astFactory = new TypeScriptASTFactory(this.typeFormatter)
+		if (format === OutputFormat.TYPE_GRAPHQL || format === OutputFormat.NESTJS) {
+			this.astFactory = new TypeScriptASTFactory(this.typeFormatter, format)
 		}
 	}
 
@@ -217,17 +217,5 @@ export class UnifiedScalarGenerator {
 
 	static supportsScalarType(prismaType: string): boolean {
 		return getScalarDefinition(prismaType) !== undefined
-	}
-
-	static getSupportedFormats(): OutputFormat[] {
-		return [OutputFormat.GRAPHQL, OutputFormat.TYPE_GRAPHQL]
-	}
-
-	static createGraphQLGenerator(context: any): UnifiedScalarGenerator {
-		return new UnifiedScalarGenerator(context, OutputFormat.GRAPHQL)
-	}
-
-	static createTypeScriptGenerator(context: any): UnifiedScalarGenerator {
-		return new UnifiedScalarGenerator(context, OutputFormat.TYPE_GRAPHQL)
 	}
 }

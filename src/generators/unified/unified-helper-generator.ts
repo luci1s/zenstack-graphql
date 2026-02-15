@@ -1,14 +1,15 @@
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { UnifiedGeneratorContext } from '@generators/strategies'
-import { DataModel, DataModelField } from '@zenstackhq/sdk/ast'
-import { RelationField } from './unified-relation-generator'
-import { OutputFormat } from '@utils/constants'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { UnifiedGeneratorContext } from '../strategies/index.js'
+import { DataModel, DataField } from '@zenstackhq/sdk/ast'
+import { RelationField } from './unified-relation-generator.js'
+import { OutputFormat } from '../../utils/constants.js'
 
 export interface HelperGenerationContext {
 	models: DataModel[]
 	relations: RelationField[]
 	outputFormat: OutputFormat
 	attributeProcessor: any
+	output: string
 }
 
 export interface ModelHelper {
@@ -42,6 +43,7 @@ export class UnifiedHelperGenerator extends UnifiedGeneratorBase {
 			relations: this.extractRelations(),
 			outputFormat: this.options.outputFormat,
 			attributeProcessor: this.attributeProcessor,
+			output: this.options.output,
 		}
 
 		return this.outputStrategy.generateHelpers?.(modelHelpers, helperContext) || []
@@ -120,7 +122,7 @@ export class UnifiedHelperGenerator extends UnifiedGeneratorBase {
 		return this.models.find((model) => model.name === name)
 	}
 
-	private findRelatedField(targetModel: DataModel, sourceModelName: string): DataModelField | undefined {
+	private findRelatedField(targetModel: DataModel, sourceModelName: string): DataField | undefined {
 		return targetModel.fields.find((field) => {
 			return this.typeMapper?.isRelationField(field) && field.type.reference?.ref?.name === sourceModelName
 		})

@@ -1,8 +1,9 @@
-import { Project, SourceFile, ClassDeclaration, EnumDeclaration } from 'ts-morph'
-import { DataModel, DataField, Enum, isDataModel } from '@zenstackhq/sdk/ast'
+import { ClassDeclaration, EnumDeclaration, Project, SourceFile } from 'ts-morph'
+import { DataField, DataModel, Enum, isDataModel } from '@zenstackhq/sdk/ast'
 import { TypeFormatter } from '../../utils/schema/type-formatter.js'
 import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
 import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
+import { OutputFormat } from '../constants.js'
 
 export class TypeScriptASTFactory {
 	private project: Project
@@ -12,6 +13,7 @@ export class TypeScriptASTFactory {
 
 	constructor(
 		private readonly typeFormatter: TypeFormatter,
+		private readonly format: OutputFormat,
 		typeMapper?: UnifiedTypeMapper,
 		schemaProcessor?: SchemaProcessor,
 	) {
@@ -25,7 +27,7 @@ export class TypeScriptASTFactory {
 	private addImports(): void {
 		this.sourceFile.addImportDeclarations([
 			{
-				moduleSpecifier: 'type-graphql',
+				moduleSpecifier: this.format === OutputFormat.TYPE_GRAPHQL ? 'type-graphql' : '@nestjs/graphql',
 				namedImports: ['ObjectType', 'Field', 'ID', 'Int', 'Float', 'registerEnumType', 'InputType', 'ArgsType', 'InterfaceType'],
 			},
 			{
@@ -584,7 +586,7 @@ registerEnumType(SortDirection, {
 			decorators: [
 				{
 					name: 'InterfaceType',
-					arguments: [`{ description: 'Base interface for all edge types in connections', autoRegisterImplementations: false }`],
+					arguments: [`{ description: 'Base interface for all edge types in connections', ${this.format === OutputFormat.TYPE_GRAPHQL ? 'autoRegisterImplementations: false' : 'isAbstract: true'} }`],
 				},
 			],
 		})
@@ -614,7 +616,7 @@ registerEnumType(SortDirection, {
 			decorators: [
 				{
 					name: 'InterfaceType',
-					arguments: [`{ description: 'Base interface for all connection types', autoRegisterImplementations: false }`],
+					arguments: [`{ description: 'Base interface for all connection types', ${this.format === OutputFormat.TYPE_GRAPHQL ? 'autoRegisterImplementations: false' : 'isAbstract: true'} }`],
 				},
 			],
 		})

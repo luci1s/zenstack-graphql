@@ -11,7 +11,7 @@ export interface EnumGenerationResult {
 export class UnifiedEnumGenerator extends UnifiedGeneratorBase {
 	private format: OutputFormat
 
-	constructor(context: UnifiedGeneratorContext, format: OutputFormat = OutputFormat.TYPE_GRAPHQL) {
+	constructor(context: UnifiedGeneratorContext, format: OutputFormat) {
 		super(context)
 		this.format = format
 	}
@@ -38,9 +38,5 @@ export class UnifiedEnumGenerator extends UnifiedGeneratorBase {
 
 	protected generateForModel(): string | null {
 		return null
-	}
-
-	static getSupportedFormats(): OutputFormat[] {
-		return [OutputFormat.GRAPHQL, OutputFormat.TYPE_GRAPHQL]
 	}
 }

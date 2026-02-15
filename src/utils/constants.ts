@@ -38,6 +38,7 @@ export const GENERATOR_TYPES = {
 export enum OutputFormat {
 	GRAPHQL = 'graphql',
 	TYPE_GRAPHQL = 'type-graphql',
+	NESTJS = 'nestjs',
 }
 
 export interface ScalarConfig {

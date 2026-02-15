@@ -190,7 +190,7 @@ export class UnifiedTypeMapper {
 
 	getPropertyTypeString(field: DataField, format: OutputFormat): string {
 		const baseType = this.getBaseType(field, format)
-		const suffix = field.type.optional ? '?' : format === OutputFormat.TYPE_GRAPHQL ? '!' : ''
+		const suffix = field.type.optional ? '?' : format === OutputFormat.TYPE_GRAPHQL || format === OutputFormat.NESTJS ? '!' : ''
 		const finalType = field.type.array ? (format === OutputFormat.GRAPHQL ? `${baseType}[]` : `${baseType}[]`) : baseType
 
 		return `${field.name}${suffix}: ${finalType}`

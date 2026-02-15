@@ -6,6 +6,7 @@ import { TypeScriptASTFactory } from '../../utils/typescript/ast-factory.js'
 import { TypeFormatter } from '../../utils/schema/type-formatter.js'
 import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
 import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
+import { OutputFormat } from '../../utils/index.js'
 
 export class UnifiedContextFactory {
 	static createGraphQLContext(graphqlContext: GeneratorContext): UnifiedGeneratorContext {
@@ -27,11 +28,11 @@ export class UnifiedContextFactory {
 		}
 	}
 
-	static createTypeScriptContext(factoryContext: BaseGeneratorContext): UnifiedGeneratorContext {
+	static createTypeScriptContext(factoryContext: BaseGeneratorContext, format: OutputFormat): UnifiedGeneratorContext {
 		const typeFormatter = new TypeFormatter(factoryContext.options.typeNaming, factoryContext.options.fieldNaming)
 		const attributeProcessor = new SchemaProcessor()
 		const typeMapper = new UnifiedTypeMapper(typeFormatter, factoryContext.models, factoryContext.enums, factoryContext.options)
-		const astFactory = new TypeScriptASTFactory(typeFormatter, typeMapper, attributeProcessor)
+		const astFactory = new TypeScriptASTFactory(typeFormatter, format, typeMapper, attributeProcessor)
 		const outputStrategy = new TypeScriptOutputStrategy(astFactory)
 
 		return {

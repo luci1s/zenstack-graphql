@@ -1,7 +1,7 @@
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { UnifiedGeneratorContext } from '@generators/strategies'
-import { DataModel, DataModelField } from '@zenstackhq/sdk/ast'
-import { ErrorCategory, PluginError, warning } from '@utils/error'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { UnifiedGeneratorContext } from '../strategies/index.js'
+import { DataModel, DataField } from '@zenstackhq/sdk/ast'
+import { ErrorCategory, PluginError, warning } from '../../utils/error.js'
 
 export interface FieldConfig {
 	type: string
@@ -60,7 +60,7 @@ export class UnifiedObjectTypeGenerator extends UnifiedGeneratorBase {
 		return fields
 	}
 
-	private createFieldConfig(field: DataModelField): FieldConfig {
+	private createFieldConfig(field: DataField): FieldConfig {
 		const graphqlType = this.mapFieldType(field)
 
 		const model = this.models.find((m) => m.fields.includes(field))
@@ -76,7 +76,7 @@ export class UnifiedObjectTypeGenerator extends UnifiedGeneratorBase {
 		}
 	}
 
-	private mapFieldType(field: DataModelField): string {
+	private mapFieldType(field: DataField): string {
 		if (this.typeMapper && this.typeMapper.isRelationField(field)) {
 			return this.typeMapper.getRelationFieldType(field)
 		}

@@ -1,9 +1,9 @@
-import { DataModelField, DataModel, Enum } from '@zenstackhq/sdk/ast'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { NormalizedOptions } from '@utils/config'
+import { DataField, DataModel, Enum } from '@zenstackhq/sdk/ast'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
+import { NormalizedOptions } from '../../utils/config.js'
 
-import { OutputFormat } from '@utils/constants'
+import { OutputFormat } from '../../utils/constants.js'
 
 export interface TypeMappingConfig {
 	[prismaType: string]: {
@@ -94,7 +94,7 @@ export class UnifiedTypeMapper {
 		this.typeMapping = { ...DEFAULT_TYPE_MAPPING, ...filteredMapping }
 	}
 
-	mapFieldType(field: DataModelField, format?: OutputFormat): string | null {
+	mapFieldType(field: DataField, format?: OutputFormat): string | null {
 		const targetFormat = format || OutputFormat.GRAPHQL
 
 		try {
@@ -119,7 +119,7 @@ export class UnifiedTypeMapper {
 		return mapping?.graphqlScalar
 	}
 
-	private getBaseType(field: DataModelField, format: OutputFormat): string {
+	private getBaseType(field: DataField, format: OutputFormat): string {
 		if (field.type.type) {
 			if (field.type.type in this.options.scalarTypes) {
 				const customType = this.options.scalarTypes[field.type.type]
@@ -173,7 +173,7 @@ export class UnifiedTypeMapper {
 		this.typeMapping[prismaType] = mapping
 	}
 
-	getFieldDecoratorArgs(field: DataModelField, format: OutputFormat): string[] {
+	getFieldDecoratorArgs(field: DataField, format: OutputFormat): string[] {
 		if (format !== OutputFormat.GRAPHQL) {
 			return []
 		}
@@ -188,7 +188,7 @@ export class UnifiedTypeMapper {
 		return args
 	}
 
-	getPropertyTypeString(field: DataModelField, format: OutputFormat): string {
+	getPropertyTypeString(field: DataField, format: OutputFormat): string {
 		const baseType = this.getBaseType(field, format)
 		const suffix = field.type.optional ? '?' : format === OutputFormat.TYPE_GRAPHQL ? '!' : ''
 		const finalType = field.type.array ? (format === OutputFormat.GRAPHQL ? `${baseType}[]` : `${baseType}[]`) : baseType
@@ -196,7 +196,7 @@ export class UnifiedTypeMapper {
 		return `${field.name}${suffix}: ${finalType}`
 	}
 
-	getRelationFieldType(field: DataModelField): string {
+	getRelationFieldType(field: DataField): string {
 		let typeStr = field.type.reference?.ref?.name || ''
 
 		if (this.customModelNameMap.has(typeStr)) {
@@ -238,11 +238,11 @@ export class UnifiedTypeMapper {
 		return false
 	}
 
-	isRelationField(field: DataModelField): boolean {
+	isRelationField(field: DataField): boolean {
 		return !!field.type.reference && this.isModelType(field.type.reference.ref?.name || '')
 	}
 
-	getFieldTypeCategory(field: DataModelField): FieldTypeCategory {
+	getFieldTypeCategory(field: DataField): FieldTypeCategory {
 		if (this.isRelationField(field)) {
 			return FieldTypeCategory.OBJECT
 		}

@@ -1,7 +1,7 @@
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { UnifiedGeneratorContext } from '@generators/strategies'
-import { DataModel, DataModelField } from '@zenstackhq/sdk/ast'
-import { ErrorCategory, PluginError, warning } from '@utils/error'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { UnifiedGeneratorContext } from '../strategies/index.js'
+import { DataModel, DataField } from '@zenstackhq/sdk/ast'
+import { ErrorCategory, PluginError, warning } from '../../utils/error.js'
 
 export interface RelationField {
 	modelName: string
@@ -93,7 +93,7 @@ export class UnifiedRelationGenerator extends UnifiedGeneratorBase {
 		return this.attributeProcessor.model(model).isIgnored()
 	}
 
-	private shouldSkipField(model: DataModel, field: DataModelField): boolean {
+	private shouldSkipField(model: DataModel, field: DataField): boolean {
 		return !this.attributeProcessor.field(model, field.name).shouldInclude(true)
 	}
 
@@ -101,7 +101,7 @@ export class UnifiedRelationGenerator extends UnifiedGeneratorBase {
 		return this.models.find((model) => model.name === name)
 	}
 
-	private findRelatedField(model: DataModel, sourceModelName: string): DataModelField | undefined {
+	private findRelatedField(model: DataModel, sourceModelName: string): DataField | undefined {
 		return model.fields.find((field) => {
 			if (!field.type.reference || !field.type.reference.ref) return false
 

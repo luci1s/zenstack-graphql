@@ -1,7 +1,7 @@
-import { AttributeArg, DataModel, DataModelField, DataModelAttribute, DataModelFieldAttribute, Enum } from '@zenstackhq/sdk/ast'
-import { TypeFormatter } from './type-formatter'
+import { AttributeArg, DataModel, DataField, DataModelAttribute, DataFieldAttribute, Enum } from '@zenstackhq/sdk/ast'
+import { TypeFormatter } from './type-formatter.js'
 
-type AttributeType = DataModelAttribute | DataModelFieldAttribute | undefined
+type AttributeType = DataModelAttribute | DataFieldAttribute | undefined
 type AttributeGetter<T> = (attr: AttributeType, argName?: string) => T | undefined
 
 export interface ModelAttributeChain {
@@ -32,7 +32,7 @@ export interface FieldAttributeChain {
 	isSortableType(): boolean
 	isRangeFilterableType(): boolean
 	isStringSearchableType(): boolean
-	field: DataModelField | undefined
+	field: DataField | undefined
 	model: DataModel
 	getFormattedFieldName(formatter: TypeFormatter): string
 }
@@ -131,11 +131,11 @@ export class SchemaProcessor {
 		}
 	}
 
-	private findAttribute(attributes: readonly (DataModelAttribute | DataModelFieldAttribute)[] | undefined, attrName: string): AttributeType {
+	private findAttribute(attributes: readonly (DataModelAttribute | DataFieldAttribute)[] | undefined, attrName: string): AttributeType {
 		return attributes?.find((attr) => attr.decl?.ref?.name === attrName)
 	}
 
-	private hasAttribute(attributes: readonly (DataModelAttribute | DataModelFieldAttribute)[] | undefined, attrName: string): boolean {
+	private hasAttribute(attributes: readonly (DataModelAttribute | DataFieldAttribute)[] | undefined, attrName: string): boolean {
 		return !!this.findAttribute(attributes, attrName)
 	}
 

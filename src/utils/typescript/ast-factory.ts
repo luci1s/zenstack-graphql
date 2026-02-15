@@ -1,8 +1,8 @@
 import { Project, SourceFile, ClassDeclaration, EnumDeclaration } from 'ts-morph'
-import { DataModel, DataModelField, Enum, isDataModel } from '@zenstackhq/sdk/ast'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
+import { DataModel, DataField, Enum, isDataModel } from '@zenstackhq/sdk/ast'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
+import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
 
 export class TypeScriptASTFactory {
 	private project: Project
@@ -177,7 +177,7 @@ registerEnumType(${typeName}, {
 		return enumDeclaration
 	}
 
-	private addFieldToClass(classDeclaration: ClassDeclaration, field: DataModelField): void {
+	private addFieldToClass(classDeclaration: ClassDeclaration, field: DataField): void {
 		const fieldName = this.typeFormatter.formatFieldName(field.name)
 		const fieldType = this.getFieldType(field)
 		const typeScriptType = this.getTypeScriptType(field)
@@ -198,7 +198,7 @@ registerEnumType(${typeName}, {
 		})
 	}
 
-	private getFieldDecoratorArgs(field: DataModelField, fieldType: string): string[] {
+	private getFieldDecoratorArgs(field: DataField, fieldType: string): string[] {
 		const decoratorType = fieldType.replace(/DateTime/g, 'Date').replace(/JSON/g, 'GraphQLJSON')
 		const args = [`() => ${decoratorType}`]
 
@@ -209,7 +209,7 @@ registerEnumType(${typeName}, {
 		return args
 	}
 
-	private getFieldType(field: DataModelField): string {
+	private getFieldType(field: DataField): string {
 		if (this.typeMapper?.isRelationField(field)) {
 			const referencedModel = field.type.reference?.ref
 			if (referencedModel && this.schemaProcessor && isDataModel(referencedModel)) {
@@ -241,7 +241,7 @@ registerEnumType(${typeName}, {
 		return this.getScalarFieldType(field)
 	}
 
-	private getScalarFieldType(field: DataModelField): string {
+	private getScalarFieldType(field: DataField): string {
 		switch (field.type.type) {
 			case 'String':
 				return 'String'
@@ -265,7 +265,7 @@ registerEnumType(${typeName}, {
 		}
 	}
 
-	private getTypeScriptType(field: DataModelField): string {
+	private getTypeScriptType(field: DataField): string {
 		if (this.typeMapper?.isRelationField(field)) {
 			const referencedModel = field.type.reference?.ref
 			if (referencedModel && this.schemaProcessor && isDataModel(referencedModel)) {
@@ -290,7 +290,7 @@ registerEnumType(${typeName}, {
 		return baseType
 	}
 
-	private getTypeScriptBaseType(field: DataModelField): string {
+	private getTypeScriptBaseType(field: DataField): string {
 		if (field.type.reference?.ref?.name) {
 			return this.typeFormatter.formatTypeName(field.type.reference.ref.name)
 		}
@@ -811,7 +811,7 @@ registerEnumType(SortDirection, {
 		return classDeclaration
 	}
 
-	private addInputFieldToClass(classDeclaration: ClassDeclaration, field: DataModelField, inputType: 'create' | 'update'): void {
+	private addInputFieldToClass(classDeclaration: ClassDeclaration, field: DataField, inputType: 'create' | 'update'): void {
 		const fieldName = field.name
 		const tsType = this.getTypeScriptType(field)
 
@@ -844,11 +844,11 @@ registerEnumType(SortDirection, {
 		this.addImports()
 	}
 
-	private fieldHasDefaultValue(field: DataModelField): boolean {
+	private fieldHasDefaultValue(field: DataField): boolean {
 		return field.attributes?.some((attr) => attr.decl?.ref?.name === 'default') ?? false
 	}
 
-	private getGraphQLType(field: DataModelField): string {
+	private getGraphQLType(field: DataField): string {
 		if (this.typeMapper) {
 			const mappedType = this.typeMapper.mapFieldType(field)
 			if (mappedType) {

@@ -1,6 +1,6 @@
-import { DataModel, DataModelField } from '@zenstackhq/sdk/ast'
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { FilterFieldDefinition } from '@generators/strategies'
+import { DataModel, DataField } from '@zenstackhq/sdk/ast'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { FilterFieldDefinition } from '../strategies/index.js'
 
 export class UnifiedFilterInputGenerator extends UnifiedGeneratorBase {
 	protected override beforeGeneration(): void {
@@ -49,7 +49,7 @@ export class UnifiedFilterInputGenerator extends UnifiedGeneratorBase {
 			}))
 	}
 
-	private getFilterInputTypeForField(field: DataModelField): string {
+	private getFilterInputTypeForField(field: DataField): string {
 		const fieldProcessor = this.attributeProcessor.field(this.models.find((m) => m.fields.includes(field))!, field.name)
 
 		if (field.type.reference?.ref?.name && this.typeMapper?.isEnumType(field.type.reference.ref.name)) {

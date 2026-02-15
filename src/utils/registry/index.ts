@@ -1,7 +1,7 @@
-export * from './base-registry'
-export * from './graphql-registry'
-export * from './typescript-registry'
-export * from './registry-factory'
+export * from './base-registry.js'
+export * from './graphql-registry.js'
+export * from './typescript-registry.js'
+export * from './registry-factory.js'
 
-export { GraphQLRegistry as Registry } from './graphql-registry'
-export { TypeKind } from './base-registry'
+export { GraphQLRegistry as Registry } from './graphql-registry.js'
+export { TypeKind } from './base-registry.js'

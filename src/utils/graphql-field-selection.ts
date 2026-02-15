@@ -1,6 +1,6 @@
 import type { GraphQLResolveInfo, FieldNode, SelectionNode, GraphQLCompositeType, GraphQLField, GraphQLNamedType } from 'graphql'
 import { getNamedType, isCompositeType } from 'graphql'
-import { getArgumentValues } from 'graphql/execution/values'
+import { getArgumentValues } from 'graphql/execution/values.js'
 
 export interface ResolveTree {
 	name: string

@@ -1,3 +1,3 @@
-export * from './generator-orchestrator'
-export * from './stats-collector'
-export * from './output-writer'
+export * from './generator-orchestrator.js'
+export * from './stats-collector.js'
+export * from './output-writer.js'

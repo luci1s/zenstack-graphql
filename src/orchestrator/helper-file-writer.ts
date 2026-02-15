@@ -1,5 +1,5 @@
-import { FileWriter } from '@utils/file-writer'
-import { OutputFormat } from '@utils/constants'
+import { FileWriter } from '../utils/file-writer.js'
+import { OutputFormat } from '../utils/constants.js'
 import path from 'path'
 
 export class HelperFileWriter {

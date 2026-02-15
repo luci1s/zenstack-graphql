@@ -1,5 +1,5 @@
-import { TypeKind, BaseTypeInfo } from './base-registry'
-import { BaseRegistry } from './base-registry'
+import { TypeKind, BaseTypeInfo } from './base-registry.js'
+import { BaseRegistry } from './base-registry.js'
 
 export interface TypeScriptTypeInfo extends BaseTypeInfo<string> {
 	code: string

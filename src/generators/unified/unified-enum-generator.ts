@@ -1,7 +1,7 @@
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { UnifiedGeneratorContext } from '@generators/strategies'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { UnifiedGeneratorContext } from '../strategies/index.js'
 import { Enum } from '@zenstackhq/sdk/ast'
-import { OutputFormat } from '@utils/constants'
+import { OutputFormat } from '../../utils/constants.js'
 
 export interface EnumGenerationResult {
 	graphqlTypes: string[]

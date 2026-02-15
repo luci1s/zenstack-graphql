@@ -1,7 +1,7 @@
 import { SchemaComposer } from 'graphql-compose'
-import { GraphQLRegistry } from './graphql-registry'
-import { TypeScriptRegistry } from './typescript-registry'
-import { BaseRegistry, TypeKind, BaseTypeInfo } from './base-registry'
+import { GraphQLRegistry } from './graphql-registry.js'
+import { TypeScriptRegistry } from './typescript-registry.js'
+import { BaseRegistry, TypeKind, BaseTypeInfo } from './base-registry.js'
 
 export type RegistryFormat = 'graphql' | 'type-graphql'
 

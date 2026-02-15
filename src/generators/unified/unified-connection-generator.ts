@@ -1,5 +1,5 @@
 import { DataModel } from '@zenstackhq/sdk/ast'
-import { UnifiedGeneratorBase } from './unified-generator-base'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
 
 export class UnifiedConnectionGenerator extends UnifiedGeneratorBase {
 	protected override beforeGeneration(): void {

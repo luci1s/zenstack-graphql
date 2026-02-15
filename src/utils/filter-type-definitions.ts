@@ -1,4 +1,4 @@
-import { FilterFieldDefinition } from '@generators/strategies'
+import { FilterFieldDefinition } from '../generators/strategies/index.js'
 
 export interface CommonFilterTypeDefinition {
 	name: string

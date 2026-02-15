@@ -1,10 +1,10 @@
-import { TypeScriptASTFactory } from '@utils/typescript/ast-factory'
+import { TypeScriptASTFactory } from '../../utils/typescript/ast-factory.js'
 import { DataModel } from '@zenstackhq/sdk/ast'
-import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy'
-import { RelationField } from '@generators/unified/unified-relation-generator'
-import { COMMON_FILTER_TYPES, createFilterFields } from '@utils/filter-type-definitions'
-import { ModelHelper, HelperGenerationContext } from '@generators/unified/unified-helper-generator'
-import { TypeScriptHelperStrategy } from './typescript-helper-strategy'
+import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy.js'
+import { RelationField } from '../unified/unified-relation-generator.js'
+import { COMMON_FILTER_TYPES, createFilterFields } from '../../utils/filter-type-definitions.js'
+import { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
+import { TypeScriptHelperStrategy } from './typescript-helper-strategy.js'
 
 export class TypeScriptOutputStrategy implements OutputStrategy {
 	constructor(private readonly astFactory: TypeScriptASTFactory) {}

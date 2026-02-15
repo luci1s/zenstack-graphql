@@ -1,4 +1,4 @@
-import { GenerationResult, UnifiedGenerationStats, GenerationType } from '@core/types'
+import { GenerationResult, UnifiedGenerationStats, GenerationType } from '../core/types.js'
 
 export class StatsCollector {
 	static collect(results: GenerationResult[], startTime?: number): UnifiedGenerationStats {

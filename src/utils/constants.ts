@@ -1,5 +1,5 @@
 import { GraphQLScalarType, GraphQLError } from 'graphql'
-import { Kind } from 'graphql/language'
+import { Kind } from 'graphql/language/index.js'
 
 export const BUILTIN_GRAPHQL_SCALARS = ['String', 'Int', 'Float', 'Boolean', 'ID'] as const
 export const BUILTIN_PRISMA_TYPES = ['DateTime', 'Json', 'Decimal', 'Bytes'] as const

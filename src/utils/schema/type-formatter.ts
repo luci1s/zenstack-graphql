@@ -1,4 +1,4 @@
-import { FieldNaming, TypeNaming } from '@utils/config'
+import { FieldNaming, TypeNaming } from '../../utils/config.js'
 import { pascalCase, camelCase, snakeCase, constantCase } from 'change-case'
 
 export class TypeFormatter {

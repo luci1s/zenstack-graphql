@@ -1,7 +1,7 @@
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { UnifiedGeneratorContext } from '@generators/strategies'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { UnifiedGeneratorContext } from '../strategies/index.js'
 import { DataModel } from '@zenstackhq/sdk/ast'
-import { ErrorCategory, warning } from '@utils/error'
+import { ErrorCategory, warning } from '../../utils/error.js'
 
 export class UnifiedQueryArgsGenerator extends UnifiedGeneratorBase {
 	constructor(context: UnifiedGeneratorContext) {

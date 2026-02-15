@@ -1,11 +1,11 @@
-import { BaseGeneratorContext, GeneratorContext } from '@core/types'
-import { UnifiedGeneratorContext } from '@generators/strategies'
-import { GraphQLOutputStrategy } from '@generators/strategies/graphql-output-strategy'
-import { TypeScriptOutputStrategy } from '@generators/strategies/typescript-output-strategy'
-import { TypeScriptASTFactory } from '@utils/typescript/ast-factory'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
+import { BaseGeneratorContext, GeneratorContext } from '../../core/types.js'
+import { UnifiedGeneratorContext } from '../strategies/index.js'
+import { GraphQLOutputStrategy } from '../strategies/graphql-output-strategy.js'
+import { TypeScriptOutputStrategy } from '../strategies/typescript-output-strategy.js'
+import { TypeScriptASTFactory } from '../../utils/typescript/ast-factory.js'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
+import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
 
 export class UnifiedContextFactory {
 	static createGraphQLContext(graphqlContext: GeneratorContext): UnifiedGeneratorContext {

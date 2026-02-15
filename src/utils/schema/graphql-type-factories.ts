@@ -1,6 +1,6 @@
 import { SchemaComposer, ObjectTypeComposer, InputTypeComposer, EnumTypeComposer } from 'graphql-compose'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { warning, ErrorCategory } from '@utils/error'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { warning, ErrorCategory } from '../../utils/error.js'
 import { DataModel, Enum } from '@zenstackhq/sdk/ast'
 
 export class GraphQLTypeFactories {

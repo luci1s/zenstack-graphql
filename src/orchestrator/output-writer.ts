@@ -1,7 +1,7 @@
-import { UnifiedGenerationResult } from '@core/types'
-import { FileWriter } from '@utils/file-writer'
-import { OutputFormat } from '@utils/constants'
-import { HelperFileWriter } from './helper-file-writer'
+import { UnifiedGenerationResult } from '../core/types.js'
+import { FileWriter } from '../utils/file-writer.js'
+import { OutputFormat } from '../utils/constants.js'
+import { HelperFileWriter } from './helper-file-writer.js'
 import path from 'path'
 
 export class OutputWriter {

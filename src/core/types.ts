@@ -1,12 +1,12 @@
 import { SchemaComposer } from 'graphql-compose'
 import { DataModel, Enum } from '@zenstackhq/sdk/ast'
-import { NormalizedOptions } from '@utils/config'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { GraphQLTypeFactories } from '@utils/schema/graphql-type-factories'
-import { GraphQLRegistry } from '@utils/registry'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
-import { OutputFormat } from '@utils/constants'
+import { NormalizedOptions } from '../utils/config.js'
+import { SchemaProcessor } from '../utils/schema/schema-processor.js'
+import { GraphQLTypeFactories } from '../utils/schema/graphql-type-factories.js'
+import { GraphQLRegistry } from '../utils/index.js'
+import { TypeFormatter } from '../utils/schema/type-formatter.js'
+import { UnifiedTypeMapper } from '../utils/type-mapping/unified-type-mapper.js'
+import { OutputFormat } from '../utils/constants.js'
 
 export type ComposerType = ReturnType<SchemaComposer['get']>
 

@@ -2,11 +2,11 @@
 	"compilerOptions": {
 		"lib": ["ESNext"],
 		"target": "es2021",
-		"module": "CommonJS",
+		"module": "node16",
 		"moduleDetection": "force",
 		"allowJs": true,
 
-		"moduleResolution": "node",
+		"moduleResolution": "node16",
 		"allowImportingTsExtensions": false,
 		"verbatimModuleSyntax": false,
 		"noEmit": false,
@@ -25,19 +25,7 @@
 		"isolatedModules": true,
 		"outDir": "./dist",
 		"rootDir": "./src",
-		"baseUrl": ".",
-		"paths": {
-			"@": ["./src"],
-			"@/*": ["./src/*"],
-			"@core": ["./src/core"],
-			"@core/*": ["./src/core/*"],
-			"@generators": ["./src/generators"],
-			"@generators/*": ["./src/generators/*"],
-			"@orchestrator": ["./src/orchestrator"],
-			"@orchestrator/*": ["./src/orchestrator/*"],
-			"@utils": ["./src/utils"],
-			"@utils/*": ["./src/utils/*"]
-		}
+		"baseUrl": "."
 	},
 	"include": ["./src/**/*.ts", "./src/**/*.tsx"],
 	"exclude": ["node_modules", "dist"]

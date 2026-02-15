@@ -1,12 +1,12 @@
 import { SchemaComposer } from 'graphql-compose'
-import { NormalizedOptions } from '@utils/config'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { GraphQLRegistry } from '@utils/registry'
-import { GeneratorContext } from '@core/types'
+import { NormalizedOptions } from '../utils/config.js'
+import { SchemaProcessor } from '../utils/schema/schema-processor.js'
+import { UnifiedTypeMapper } from '../utils/type-mapping/unified-type-mapper.js'
+import { TypeFormatter } from '../utils/schema/type-formatter.js'
+import { GraphQLRegistry } from '../utils/registry/index.js'
+import { GeneratorContext } from '../core/types.js'
 import { DataModel, Enum } from '@zenstackhq/sdk/ast'
-import { GraphQLTypeFactories } from '@utils/schema/graphql-type-factories'
+import { GraphQLTypeFactories } from '../utils/schema/graphql-type-factories.js'
 
 export abstract class BaseGenerator<T = void> {
 	protected readonly options: NormalizedOptions

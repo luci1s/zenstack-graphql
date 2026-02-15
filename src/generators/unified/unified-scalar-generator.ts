@@ -1,9 +1,9 @@
 import { ScalarTypeComposer } from 'graphql-compose'
-import { BaseGeneratorContext } from '@core/types'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { GraphQLRegistry } from '@utils/registry'
+import { BaseGeneratorContext } from '../../core/types.js'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { GraphQLRegistry } from '../../utils/registry/index.js'
 import { SchemaComposer } from 'graphql-compose'
-import { TypeKind } from '@utils/registry/base-registry'
+import { TypeKind } from '../../utils/registry/base-registry.js'
 import {
 	UNIFIED_SCALAR_DEFINITIONS,
 	createGraphQLScalarType,
@@ -13,11 +13,11 @@ import {
 	BUILTIN_PRISMA_TYPES,
 	type ScalarConfig,
 	type UnifiedScalarDefinition,
-} from '@utils/constants'
-import { createGenerationContext, executeSafely } from '@utils/error'
-import { TypeScriptASTFactory } from '@utils/typescript/ast-factory'
+} from '../../utils/constants.js'
+import { createGenerationContext, executeSafely } from '../../utils/error.js'
+import { TypeScriptASTFactory } from '../../utils/typescript/ast-factory.js'
 
-import { OutputFormat } from '@utils/constants'
+import { OutputFormat } from '../../utils/constants.js'
 
 export interface ScalarGenerationResult {
 	graphqlTypes: string[]

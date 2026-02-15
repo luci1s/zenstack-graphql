@@ -1,4 +1,4 @@
-import { ErrorCategory, warning } from '@utils/error'
+import { ErrorCategory, warning } from '../../utils/error.js'
 
 export enum TypeKind {
 	OBJECT = 'object',

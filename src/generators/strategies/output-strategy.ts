@@ -1,10 +1,10 @@
 import { DataModel, Enum } from '@zenstackhq/sdk/ast'
-import { RelationField } from '@generators/unified/unified-relation-generator'
-import { NormalizedOptions } from '@utils/config'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
-import type { ModelHelper, HelperGenerationContext } from '@generators/unified/unified-helper-generator'
+import { RelationField } from '../unified/unified-relation-generator.js'
+import { NormalizedOptions } from '../../utils/config.js'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
+import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
+import type { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
 
 export interface OutputStrategy {
 	createCommonTypes?(types: CommonTypeDefinition[]): void

@@ -1,1 +1,1 @@
-export * from './ast-factory'
+export * from './ast-factory.js'

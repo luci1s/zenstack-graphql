@@ -1,6 +1,6 @@
 import { writeFile, mkdir } from 'fs/promises'
 import { dirname } from 'path'
-import { ErrorCategory, PluginError } from '@utils/error'
+import { ErrorCategory, PluginError } from '../utils/error.js'
 
 export class FileWriter {
 	async write(content: string, outputPath: string, contentType = 'file'): Promise<void> {

@@ -1,7 +1,7 @@
 import { BuiltinType } from '@zenstackhq/sdk/ast'
 import { z } from 'zod'
-import { ErrorCategory, PluginError } from '@utils/error'
-import { BUILTIN_GRAPHQL_SCALARS, GRAPHQL_NAMING_REGEX, OutputFormat } from '@utils/constants'
+import { ErrorCategory, PluginError } from './error.js'
+import { BUILTIN_GRAPHQL_SCALARS, GRAPHQL_NAMING_REGEX, OutputFormat } from '../utils/constants.js'
 
 export const SCALAR_TYPES: Record<BuiltinType, string> = {
 	String: 'String',

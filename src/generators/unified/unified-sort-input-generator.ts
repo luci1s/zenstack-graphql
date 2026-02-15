@@ -1,6 +1,6 @@
 import { DataModel } from '@zenstackhq/sdk/ast'
-import { UnifiedGeneratorBase } from './unified-generator-base'
-import { SortFieldDefinition } from '@generators/strategies'
+import { UnifiedGeneratorBase } from './unified-generator-base.js'
+import { SortFieldDefinition } from '../strategies/index.js'
 
 export class UnifiedSortInputGenerator extends UnifiedGeneratorBase {
 	protected override beforeGeneration(): void {

@@ -1,15 +1,15 @@
-export * from './config'
-export * from './error'
-export * from './file-writer'
-export * from './constants'
-export * from './filter-type-definitions'
+export * from './config.js'
+export * from './error.js'
+export * from './file-writer.js'
+export * from './constants.js'
+export * from './filter-type-definitions.js'
 
-export * from './registry'
+export * from './registry/index.js'
 
-export { UnifiedTypeMapper } from './type-mapping'
+export { UnifiedTypeMapper } from './type-mapping/index.js'
 
-export * from './schema/schema-processor'
-export * from './schema/type-formatter'
-export * from './schema/graphql-type-factories'
+export * from './schema/schema-processor.js'
+export * from './schema/type-formatter.js'
+export * from './schema/graphql-type-factories.js'
 
-export * from './typescript/ast-factory'
+export * from './typescript/ast-factory.js'

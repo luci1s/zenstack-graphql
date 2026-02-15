@@ -3,6 +3,7 @@
 	"version": "1.5.0",
 	"description": "ZenStack plugin for generating GraphQL schemas",
 	"main": "dist/index.js",
+	"type": "module",
 	"module": "index.ts",
 	"homepage": "https://github.com/hakutakuAi/zenstack-graphql",
 	"repository": {
@@ -69,9 +70,9 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^6.14.0",
-		"@zenstackhq/language": "^2.18.1",
-		"@zenstackhq/runtime": "2.18.1",
-		"@zenstackhq/sdk": "2.18.1",
+		"@zenstackhq/language": "^3.3.3",
+		"@zenstackhq/runtime": "^2.22.1",
+		"@zenstackhq/sdk": "^3.3.3",
 		"change-case": "^5.4.4",
 		"graphql": "^16.11.0",
 		"graphql-compose": "^9.1.0",

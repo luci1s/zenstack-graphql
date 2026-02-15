@@ -1,6 +1,6 @@
-import { BaseGeneratorContext, GeneratorContext, UnifiedGenerationResult, GenerationResult, GenerationType } from '@core/types'
-import { OutputFormat } from '@utils/constants'
-import { StatsCollector } from './stats-collector'
+import { BaseGeneratorContext, GeneratorContext, UnifiedGenerationResult, GenerationResult, GenerationType } from '../core/types.js'
+import { OutputFormat } from '../utils/constants.js'
+import { StatsCollector } from './stats-collector.js'
 import {
 	UnifiedGeneratorFactory,
 	UnifiedContextFactory,
@@ -14,15 +14,15 @@ import {
 	UnifiedEnumGenerator,
 	UnifiedScalarGenerator,
 	UnifiedHelperGenerator,
-} from '@generators/unified'
-import { UnifiedGeneratorContext } from '@generators/strategies'
+} from '../generators/unified/index.js'
+import { UnifiedGeneratorContext } from '../generators/strategies/index.js'
 import { SchemaComposer } from 'graphql-compose'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { GraphQLTypeFactories } from '@utils/schema/graphql-type-factories'
-import { GraphQLRegistry } from '@utils/registry'
-import { TypeKind } from '@utils/registry/base-registry'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
+import { SchemaProcessor } from '../utils/schema/schema-processor.js'
+import { GraphQLTypeFactories } from '../utils/schema/graphql-type-factories.js'
+import { GraphQLRegistry } from '../utils/registry/index.js'
+import { TypeKind } from '../utils/registry/base-registry.js'
+import { TypeFormatter } from '../utils/schema/type-formatter.js'
+import { UnifiedTypeMapper } from '../utils/type-mapping/unified-type-mapper.js'
 
 interface TypeScriptGenerators {
 	sortInputGenerator: UnifiedSortInputGenerator

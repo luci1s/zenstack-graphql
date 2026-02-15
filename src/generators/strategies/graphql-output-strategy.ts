@@ -1,14 +1,14 @@
 import { SchemaComposer } from 'graphql-compose'
-import { GraphQLRegistry } from '@utils/registry'
-import { GraphQLTypeFactories } from '@utils/schema/graphql-type-factories'
-import { TypeKind } from '@utils/registry'
-import { ErrorCategory, PluginError } from '@utils/error'
+import { GraphQLRegistry } from '../../utils/index.js'
+import { GraphQLTypeFactories } from '../../utils/schema/graphql-type-factories.js'
+import { TypeKind } from '../../utils/index.js'
+import { ErrorCategory, PluginError } from '../../utils/error.js'
 import { DataModel } from '@zenstackhq/sdk/ast'
-import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy'
-import { RelationField } from '@generators/unified/unified-relation-generator'
-import { COMMON_FILTER_TYPES, createGraphQLFilterFields } from '@utils/filter-type-definitions'
-import { ModelHelper, HelperGenerationContext } from '@generators/unified/unified-helper-generator'
-import { GraphQLHelperStrategy } from './graphql-helper-strategy'
+import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy.js'
+import { RelationField } from '../unified/unified-relation-generator.js'
+import { COMMON_FILTER_TYPES, createGraphQLFilterFields } from '../../utils/filter-type-definitions.js'
+import { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
+import { GraphQLHelperStrategy } from './graphql-helper-strategy.js'
 
 export class GraphQLOutputStrategy implements OutputStrategy {
 	constructor(

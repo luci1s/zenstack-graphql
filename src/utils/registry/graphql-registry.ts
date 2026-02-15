@@ -8,10 +8,10 @@ import {
 	UnionTypeComposer,
 } from 'graphql-compose'
 import { printSchema, GraphQLSchema } from 'graphql'
-import { ErrorCategory, PluginError } from '@utils/error'
-import { COMMON_TYPES } from '@utils/constants'
-import { TypeKind, BaseTypeInfo } from './base-registry'
-import { BaseRegistry } from './base-registry'
+import { ErrorCategory, PluginError } from '../../utils/error.js'
+import { COMMON_TYPES } from '../../utils/constants.js'
+import { TypeKind, BaseTypeInfo } from './base-registry.js'
+import { BaseRegistry } from './base-registry.js'
 
 export interface GraphQLTypeInfo extends BaseTypeInfo<any> {
 	composer: any

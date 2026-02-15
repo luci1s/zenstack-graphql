@@ -1,2 +1,2 @@
-export * as UnifiedGenerators from './unified'
+export * as UnifiedGenerators from './unified/index.js'
 

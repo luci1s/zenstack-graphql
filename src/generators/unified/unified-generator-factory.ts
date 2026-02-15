@@ -1,5 +1,5 @@
-import { BaseGeneratorContext, GeneratorContext } from '@core/types'
-import { OutputFormat } from '@utils/constants'
+import { BaseGeneratorContext, GeneratorContext } from '../../core/types.js'
+import { OutputFormat } from '../../utils/constants.js'
 import {
 	UnifiedSortInputGenerator,
 	UnifiedFilterInputGenerator,
@@ -12,7 +12,7 @@ import {
 	UnifiedScalarGenerator,
 	UnifiedContextFactory,
 	UnifiedHelperGenerator,
-} from '@generators/unified'
+} from '../unified/index.js'
 
 export class UnifiedGeneratorFactory {
 	static createGraphQLGenerators(context: GeneratorContext) {

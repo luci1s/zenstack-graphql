@@ -49,3 +49,7 @@ dist
 
 # Test outputs
 .tmp/
+
+# IDE files
+.idea/
+.vs/

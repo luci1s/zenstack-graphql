@@ -3,7 +3,7 @@ import { GraphQLRegistry } from '../../utils/index.js'
 import { GraphQLTypeFactories } from '../../utils/schema/graphql-type-factories.js'
 import { TypeKind } from '../../utils/index.js'
 import { ErrorCategory, PluginError } from '../../utils/error.js'
-import { DataModel } from '@zenstackhq/sdk/ast'
+import { DataModel, Reference, TypeDef } from '@zenstackhq/sdk/ast'
 import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy.js'
 import { RelationField } from '../unified/unified-relation-generator.js'
 import { COMMON_FILTER_TYPES, createGraphQLFilterFields } from '../../utils/filter-type-definitions.js'
@@ -272,7 +272,7 @@ export class GraphQLOutputStrategy implements OutputStrategy {
 		return this.schemaComposer.has(typeName) || this.registry.hasType(typeName)
 	}
 
-	createObjectType(typeName: string, fields: Record<string, any>, description?: string): string {
+	createObjectType(typeName: string, fields: Record<string, any>, mixins: Reference<TypeDef>[], description?: string): string {
 		if (this.hasType(typeName)) {
 			return typeName
 		}

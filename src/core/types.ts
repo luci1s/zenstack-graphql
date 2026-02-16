@@ -1,5 +1,5 @@
 import { SchemaComposer } from 'graphql-compose'
-import { DataModel, Enum } from '@zenstackhq/sdk/ast'
+import { DataModel, Enum, TypeDef } from '@zenstackhq/sdk/ast'
 import { NormalizedOptions } from '../utils/config.js'
 import { SchemaProcessor } from '../utils/schema/schema-processor.js'
 import { GraphQLTypeFactories } from '../utils/schema/graphql-type-factories.js'
@@ -14,6 +14,7 @@ export interface BaseGeneratorContext {
 	options: NormalizedOptions
 	models: DataModel[]
 	enums: Enum[]
+	types: TypeDef[]
 }
 
 export interface GeneratorContext extends BaseGeneratorContext {
@@ -41,6 +42,7 @@ export enum GenerationType {
 	SORT = 'sort',
 	RELATION = 'relation',
 	HELPER = 'helper',
+	TYPE = 'type',
 }
 
 export interface UnifiedGenerationResult {

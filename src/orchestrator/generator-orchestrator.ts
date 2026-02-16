@@ -23,6 +23,7 @@ import { GraphQLRegistry } from '../utils/registry/index.js'
 import { TypeKind } from '../utils/registry/base-registry.js'
 import { TypeFormatter } from '../utils/schema/type-formatter.js'
 import { UnifiedTypeMapper } from '../utils/type-mapping/unified-type-mapper.js'
+import { UnifiedTypeGenerator } from '../generators/unified/unified-type-generator.js'
 
 interface TypeScriptGenerators {
 	sortInputGenerator: UnifiedSortInputGenerator
@@ -35,6 +36,7 @@ interface TypeScriptGenerators {
 	inputGenerator: UnifiedInputGenerator
 	queryArgsGenerator?: UnifiedQueryArgsGenerator
 	helperGenerator?: UnifiedHelperGenerator
+	typeGenerator?: UnifiedTypeGenerator
 }
 
 interface GraphQLGenerators {
@@ -94,6 +96,7 @@ export class GeneratorOrchestrator {
 			inputGenerator: new UnifiedInputGenerator(unifiedContext),
 			queryArgsGenerator: new UnifiedQueryArgsGenerator(unifiedContext),
 			helperGenerator: new UnifiedHelperGenerator(unifiedContext),
+			typeGenerator: new UnifiedTypeGenerator(unifiedContext),
 		}
 	}
 
@@ -176,6 +179,16 @@ export class GeneratorOrchestrator {
 	private async executeGenerators(generators: TypeScriptGenerators | GraphQLGenerators): Promise<GenerationResult[]> {
 		const results: GenerationResult[] = []
 		const isTypeScript = this.outputFormat === OutputFormat.TYPE_GRAPHQL || this.outputFormat === OutputFormat.NESTJS
+
+		//TODO: Add type generator to graphQL schema
+		if ('typeGenerator' in generators && generators.typeGenerator) {
+			const typeResult = generators.typeGenerator.generate()
+			results.push({
+				items: typeResult,
+				count: typeResult.length,
+				type: GenerationType.TYPE,
+			})
+		}
 
 		if (this.context.options.generateScalars && generators.scalarGenerator) {
 			const scalarResult = generators.scalarGenerator.generate()

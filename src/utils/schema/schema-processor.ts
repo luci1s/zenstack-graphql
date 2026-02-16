@@ -1,4 +1,12 @@
-import { AttributeArg, DataModel, DataField, DataModelAttribute, DataFieldAttribute, Enum } from '@zenstackhq/sdk/ast'
+import {
+	AttributeArg,
+	DataModel,
+	DataField,
+	DataModelAttribute,
+	DataFieldAttribute,
+	Enum,
+	TypeDef, isTypeDef, isDataModel,
+} from '@zenstackhq/sdk/ast'
 import { TypeFormatter } from './type-formatter.js'
 
 type AttributeType = DataModelAttribute | DataFieldAttribute | undefined
@@ -34,7 +42,14 @@ export interface FieldAttributeChain {
 	isStringSearchableType(): boolean
 	field: DataField | undefined
 	model: DataModel
+	type: TypeDef
 	getFormattedFieldName(formatter: TypeFormatter): string
+	isId(): boolean
+}
+
+export interface TypeAttributeChain {
+	type: TypeDef
+	getFormattedTypeName(formatter: TypeFormatter): string
 }
 
 export class SchemaProcessor {
@@ -68,7 +83,7 @@ export class SchemaProcessor {
 		}
 	}
 
-	field(model: DataModel, fieldName: string): FieldAttributeChain {
+	field(model: DataModel|TypeDef, fieldName: string): FieldAttributeChain {
 		const field = model.fields?.find((f) => f.name === fieldName)
 
 		const getAttrValue = <T>(attrName: string, getter: AttributeGetter<T>, argName?: string): T | undefined => {
@@ -81,7 +96,7 @@ export class SchemaProcessor {
 
 		const fieldType = field?.type.type
 
-		return {
+		return <FieldAttributeChain>{
 			getString: (argName: string): string | undefined => {
 				const attrName = argName === 'name' ? '@graphql.name' : argName === 'description' ? '@graphql.description' : null
 				return attrName ? getAttrValue(attrName, this.getStringValue) : undefined
@@ -122,7 +137,8 @@ export class SchemaProcessor {
 			},
 			isStringSearchableType: (): boolean => fieldType === 'String',
 			field,
-			model,
+			model: isDataModel(model) ? model : undefined,
+			type: isTypeDef(model) ? model : undefined,
 			getFormattedFieldName: (formatter: TypeFormatter): string => {
 				if (!field) return formatter.formatFieldName(fieldName)
 				const customName = getAttrValue('@graphql.name', this.getStringValue)
@@ -174,6 +190,21 @@ export class SchemaProcessor {
 
 		return {
 			description: (): string | undefined => getAttrValue('@@graphql.description', this.getStringValue),
+		}
+	}
+
+	type(modelType: TypeDef): TypeAttributeChain {
+		const getAttrValue = <T>(attrName: string, getter: AttributeGetter<T>, argName?: string): T | undefined => {
+			const attr = this.findAttribute(modelType.attributes, attrName)
+			return getter(attr, argName)
+		}
+
+		return {
+			type: modelType,
+			getFormattedTypeName: (formatter: TypeFormatter): string => {
+				const customName = getAttrValue('@@graphql.name', this.getStringValue)
+				return formatter.formatTypeName(customName ?? modelType.name)
+			},
 		}
 	}
 }

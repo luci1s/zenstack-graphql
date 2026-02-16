@@ -1,16 +1,17 @@
-import { DataModel } from '@zenstackhq/sdk/ast'
-import { ErrorCategory, handleError } from '@utils/error'
-import { OutputStrategy, UnifiedGeneratorContext } from '@generators/strategies'
-import { TypeFormatter } from '@utils/schema/type-formatter'
-import { SchemaProcessor } from '@utils/schema/schema-processor'
-import { UnifiedTypeMapper } from '@utils/type-mapping/unified-type-mapper'
-import { NormalizedOptions } from '@/utils'
+import { DataModel, isAbstractDeclaration, TypeDef } from '@zenstackhq/sdk/ast'
+import { handleError } from '../../utils/error.js'
+import { OutputStrategy, UnifiedGeneratorContext } from '../strategies/index.js'
+import { TypeFormatter } from '../../utils/schema/type-formatter.js'
+import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
+import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
+import { NormalizedOptions } from '../../utils/index.js'
 
 export abstract class UnifiedGeneratorBase {
 	protected outputStrategy: OutputStrategy
 	protected options: NormalizedOptions
 	protected models: DataModel[]
 	protected enums: any[]
+	protected types: TypeDef[]
 	protected typeFormatter: TypeFormatter
 	protected attributeProcessor: SchemaProcessor
 	protected typeMapper?: UnifiedTypeMapper
@@ -20,6 +21,7 @@ export abstract class UnifiedGeneratorBase {
 		this.options = context.options
 		this.models = context.models
 		this.enums = context.enums
+		this.types = context.types
 		this.typeFormatter = context.typeFormatter
 		this.attributeProcessor = context.attributeProcessor
 		this.typeMapper = context.typeMapper

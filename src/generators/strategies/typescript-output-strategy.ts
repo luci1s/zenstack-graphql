@@ -1,10 +1,11 @@
 import { TypeScriptASTFactory } from '../../utils/typescript/ast-factory.js'
-import { DataModel } from '@zenstackhq/sdk/ast'
+import { DataModel, Reference, TypeDef } from '@zenstackhq/sdk/ast'
 import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy.js'
 import { RelationField } from '../unified/unified-relation-generator.js'
 import { COMMON_FILTER_TYPES, createFilterFields } from '../../utils/filter-type-definitions.js'
 import { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
 import { TypeScriptHelperStrategy } from './typescript-helper-strategy.js'
+import { FieldConfig } from '../unified/index.js'
 
 export class TypeScriptOutputStrategy implements OutputStrategy {
 	constructor(private readonly astFactory: TypeScriptASTFactory) {}
@@ -102,8 +103,8 @@ export class TypeScriptOutputStrategy implements OutputStrategy {
 		return this.astFactory.hasType(typeName)
 	}
 
-	createObjectType(typeName: string, fields: Record<string, any>, description?: string): string {
-		this.astFactory.createObjectTypeFromFields(typeName, fields, description)
+	createObjectType(typeName: string, fields: Record<string, FieldConfig>, mixins: Reference<TypeDef>[], description?: string): string {
+		this.astFactory.createObjectTypeFromFields(typeName, fields, mixins, description)
 		return typeName
 	}
 

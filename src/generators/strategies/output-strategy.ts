@@ -1,10 +1,11 @@
-import { DataModel, Enum } from '@zenstackhq/sdk/ast'
+import { DataModel, Enum, Reference, TypeDef } from '@zenstackhq/sdk/ast'
 import { RelationField } from '../unified/unified-relation-generator.js'
 import { NormalizedOptions } from '../../utils/config.js'
 import { TypeFormatter } from '../../utils/schema/type-formatter.js'
 import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
 import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
 import type { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
+import { FieldConfig } from '../unified/index.js'
 
 export interface OutputStrategy {
 	createCommonTypes?(types: CommonTypeDefinition[]): void
@@ -19,7 +20,7 @@ export interface OutputStrategy {
 
 	createConnectionType(typeName: string): string
 
-	createObjectType(typeName: string, fields: Record<string, any>, description?: string): string
+	createObjectType(typeName: string, fields: Record<string, FieldConfig>, mixins: Reference<TypeDef>[], description?: string): string
 
 	createInputType(typeName: string, model: DataModel, inputType: 'create' | 'update', description?: string): string
 
@@ -70,6 +71,7 @@ export interface UnifiedGeneratorContext {
 	options: NormalizedOptions
 	models: DataModel[]
 	enums: Enum[]
+	types: TypeDef[]
 	typeFormatter: TypeFormatter
 	attributeProcessor: SchemaProcessor
 	typeMapper?: UnifiedTypeMapper

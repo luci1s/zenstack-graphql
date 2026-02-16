@@ -1,9 +1,10 @@
-import { ClassDeclaration, EnumDeclaration, Project, SourceFile } from 'ts-morph'
-import { DataField, DataModel, Enum, isDataModel } from '@zenstackhq/sdk/ast'
+import { ClassDeclaration, EnumDeclaration, Project, SourceFile, WriterFunction } from 'ts-morph'
+import { DataField, DataModel, Enum, isDataModel, Reference, TypeDef } from '@zenstackhq/sdk/ast'
 import { TypeFormatter } from '../../utils/schema/type-formatter.js'
 import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.js'
 import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
 import { OutputFormat } from '../constants.js'
+import { FieldConfig } from '../../generators/unified/index.js'
 
 export class TypeScriptASTFactory {
 	private project: Project
@@ -27,10 +28,6 @@ export class TypeScriptASTFactory {
 	private addImports(): void {
 		this.sourceFile.addImportDeclarations([
 			{
-				moduleSpecifier: this.format === OutputFormat.TYPE_GRAPHQL ? 'type-graphql' : '@nestjs/graphql',
-				namedImports: ['ObjectType', 'Field', 'ID', 'Int', 'Float', 'registerEnumType', 'InputType', 'ArgsType', 'InterfaceType'],
-			},
-			{
 				moduleSpecifier: 'graphql-scalars',
 				namedImports: ['GraphQLJSON'],
 			},
@@ -39,6 +36,22 @@ export class TypeScriptASTFactory {
 				defaultImport: undefined,
 			},
 		])
+
+		if (this.format === OutputFormat.NESTJS) {
+			this.sourceFile.addImportDeclarations([
+				{
+					moduleSpecifier: '@nestjs/graphql',
+					namedImports: ['ObjectType', 'IntersectionType', 'Field', 'ID', 'Int', 'Float', 'registerEnumType', 'InputType', 'ArgsType', 'InterfaceType'],
+				},
+			])
+		} else if (this.format === OutputFormat.TYPE_GRAPHQL) {
+			this.sourceFile.addImportDeclarations([
+				{
+					moduleSpecifier: 'type-graphql',
+					namedImports: ['ObjectType', 'Field', 'ID', 'Int', 'Float', 'registerEnumType', 'InputType', 'ArgsType', 'InterfaceType'],
+				},
+			])
+		}
 	}
 
 	createObjectType(model: DataModel): ClassDeclaration {
@@ -68,7 +81,16 @@ export class TypeScriptASTFactory {
 		return classDeclaration
 	}
 
-	createObjectTypeFromFields(typeName: string, fields: Record<string, any>, description?: string): ClassDeclaration {
+	createObjectTypeFromFields(typeName: string, fields: Record<string, FieldConfig>, mixins: Reference<TypeDef>[], description?: string): ClassDeclaration {
+		const extendsTypes = mixins.length > 0 ? mixins.filter((m) => m.ref !== undefined).map((m) => this.schemaProcessor?.type(m.ref!).getFormattedTypeName(this.typeFormatter) || this.typeFormatter.formatTypeName(m.ref!.name)) : []
+		let extendsClause = '';
+		if (this.format === OutputFormat.NESTJS && extendsTypes.length > 1) {
+			extendsClause = `IntersectionType(${extendsTypes.join(', ')})`
+		} else if (extendsTypes.length > 0) {
+			//TODO: Handle multiple extends for type-graphql
+			extendsClause = extendsTypes[0] as string
+		}
+
 		const classDeclaration = this.sourceFile.addClass({
 			name: typeName,
 			isExported: true,
@@ -78,6 +100,7 @@ export class TypeScriptASTFactory {
 					arguments: description ? [`{ description: "${description}" }`] : [],
 				},
 			],
+			extends: extendsClause,
 		})
 
 		for (const [fieldName, fieldConfig] of Object.entries(fields)) {

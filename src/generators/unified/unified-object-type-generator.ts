@@ -5,6 +5,7 @@ import { ErrorCategory, PluginError, warning } from '../../utils/error.js'
 
 export interface FieldConfig {
 	type: string
+	isId?: boolean
 	description?: string
 	resolve?: any
 }
@@ -25,7 +26,7 @@ export class UnifiedObjectTypeGenerator extends UnifiedGeneratorBase {
 			const fields = this.createObjectFields(model)
 			const description = this.attributeProcessor.model(model).description()
 
-			return this.outputStrategy.createObjectType(typeName, fields, description)
+			return this.outputStrategy.createObjectType(typeName, fields, model.mixins, description)
 		} catch (error) {
 			if (error instanceof PluginError) {
 				warning(`Failed to create object type for model ${model.name}: ${error.message}`, error.category, {
@@ -70,9 +71,12 @@ export class UnifiedObjectTypeGenerator extends UnifiedGeneratorBase {
 
 		const description = this.attributeProcessor.field(model, field.name).description()
 
+		const isId = this.attributeProcessor.field(model, field.name).isId()
+
 		return {
 			type: graphqlType,
 			description,
+			isId,
 		}
 	}
 

@@ -117,7 +117,7 @@ export class TypeScriptASTFactory {
 				decorators: [
 					{
 						name: 'Field',
-						arguments: this.getSimpleFieldDecoratorArgs(graphqlType, isNullable),
+						arguments: this.getSimpleFieldDecoratorArgs(fieldConfig.isId ? 'ID' : graphqlType, isNullable),
 					},
 				],
 			})

@@ -144,6 +144,7 @@ export class SchemaProcessor {
 				const customName = getAttrValue('@graphql.name', this.getStringValue)
 				return formatter.formatFieldName(customName ?? field.name)
 			},
+			isId: (): boolean => field?.attributes?.some((attr) => attr.decl?.ref?.name === '@id') || false,
 		}
 	}
 

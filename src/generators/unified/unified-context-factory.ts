@@ -15,6 +15,8 @@ export class UnifiedContextFactory {
 			graphqlContext.schemaComposer,
 			graphqlContext.typeFactories,
 			graphqlContext.options,
+			graphqlContext.attributeProcessor,
+			graphqlContext.typeMapper,
 		)
 
 		return {

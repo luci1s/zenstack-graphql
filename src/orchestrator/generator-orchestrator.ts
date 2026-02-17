@@ -50,6 +50,7 @@ interface GraphQLGenerators {
 	inputGenerator?: UnifiedInputGenerator
 	queryArgsGenerator?: UnifiedQueryArgsGenerator
 	helperGenerator?: UnifiedHelperGenerator
+	typeGenerator?: UnifiedTypeGenerator
 }
 
 export class GeneratorOrchestrator {
@@ -180,8 +181,7 @@ export class GeneratorOrchestrator {
 		const results: GenerationResult[] = []
 		const isTypeScript = this.outputFormat === OutputFormat.TYPE_GRAPHQL || this.outputFormat === OutputFormat.NESTJS
 
-		//TODO: Add type generator to graphQL schema
-		if ('typeGenerator' in generators && generators.typeGenerator) {
+		if (generators && generators.typeGenerator) {
 			const typeResult = generators.typeGenerator.generate()
 			results.push({
 				items: typeResult,

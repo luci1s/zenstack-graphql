@@ -1,14 +1,14 @@
 import { SchemaComposer } from 'graphql-compose'
-import { GraphQLRegistry } from '../../utils/index.js'
+import { GraphQLRegistry, SchemaProcessor, TypeKind, UnifiedTypeMapper } from '../../utils/index.js'
 import { GraphQLTypeFactories } from '../../utils/schema/graphql-type-factories.js'
-import { TypeKind } from '../../utils/index.js'
 import { ErrorCategory, PluginError } from '../../utils/error.js'
 import { DataModel, Reference, TypeDef } from '@zenstackhq/sdk/ast'
-import { OutputStrategy, CommonTypeDefinition, SortFieldDefinition, FilterFieldDefinition } from './output-strategy.js'
+import { CommonTypeDefinition, FilterFieldDefinition, OutputStrategy, SortFieldDefinition } from './output-strategy.js'
 import { RelationField } from '../unified/unified-relation-generator.js'
 import { COMMON_FILTER_TYPES, createGraphQLFilterFields } from '../../utils/filter-type-definitions.js'
-import { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
+import { HelperGenerationContext, ModelHelper } from '../unified/unified-helper-generator.js'
 import { GraphQLHelperStrategy } from './graphql-helper-strategy.js'
+import { FieldConfig } from '../unified/index.js'
 
 export class GraphQLOutputStrategy implements OutputStrategy {
 	constructor(
@@ -16,6 +16,8 @@ export class GraphQLOutputStrategy implements OutputStrategy {
 		private readonly schemaComposer: SchemaComposer<unknown>,
 		private readonly typeFactories: GraphQLTypeFactories,
 		private readonly options: any,
+		private readonly attributeProcessor: SchemaProcessor,
+		private readonly typeMapper: UnifiedTypeMapper,
 	) {}
 
 	createCommonTypes(types: CommonTypeDefinition[]): void {
@@ -272,18 +274,38 @@ export class GraphQLOutputStrategy implements OutputStrategy {
 		return this.schemaComposer.has(typeName) || this.registry.hasType(typeName)
 	}
 
-	createObjectType(typeName: string, fields: Record<string, any>, mixins: Reference<TypeDef>[], description?: string): string {
+	createObjectType(typeName: string, fields: Record<string, FieldConfig>, mixins: Reference<TypeDef>[], description?: string): string {
 		if (this.hasType(typeName)) {
 			return typeName
 		}
 
 		try {
+			if (mixins.length > 0) {
+				for (const mixin of mixins) {
+					mixin.ref?.fields.map((field) => {
+						const fieldConfig = this.attributeProcessor.field(mixin.ref!, field.name)
+						if (!fieldConfig) {
+							throw new PluginError(`Unsupported field in mixin: ${field.name}`, ErrorCategory.SCHEMA, { field: field.name })
+						}
+						const graphqlType = this.typeMapper && this.typeMapper.mapFieldType(field)
+						if (!graphqlType) {
+							throw new PluginError(`Unsupported field type: ${field.type}`, ErrorCategory.SCHEMA, { field: field.name, type: field.type })
+						}
+
+						fields[field.name] = {
+							type: fieldConfig.isId() ? 'ID!' : graphqlType,
+							isId: fieldConfig.isId(),
+							description: fieldConfig.description(),
+						}
+					})
+				}
+			}
+
 			const objectTC = this.schemaComposer.createObjectTC({
 				name: typeName,
 				description,
 				fields,
 			})
-
 			this.registry.registerType(typeName, TypeKind.OBJECT, objectTC, true)
 			return typeName
 		} catch (error) {

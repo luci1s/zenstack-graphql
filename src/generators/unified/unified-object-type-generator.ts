@@ -5,7 +5,7 @@ import { ErrorCategory, PluginError, warning } from '../../utils/error.js'
 
 export interface FieldConfig {
 	type: string
-	isId?: boolean
+	isId: boolean
 	description?: string
 	resolve?: any
 }

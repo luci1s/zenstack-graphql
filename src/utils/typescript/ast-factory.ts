@@ -5,6 +5,7 @@ import { UnifiedTypeMapper } from '../../utils/type-mapping/unified-type-mapper.
 import { SchemaProcessor } from '../../utils/schema/schema-processor.js'
 import { OutputFormat } from '../constants.js'
 import { FieldConfig } from '../../generators/unified/index.js'
+import { ErrorCategory, PluginError } from '../error.js'
 
 export class TypeScriptASTFactory {
 	private project: Project
@@ -83,12 +84,13 @@ export class TypeScriptASTFactory {
 
 	createObjectTypeFromFields(typeName: string, fields: Record<string, FieldConfig>, mixins: Reference<TypeDef>[], description?: string): ClassDeclaration {
 		const extendsTypes = mixins.length > 0 ? mixins.filter((m) => m.ref !== undefined).map((m) => this.schemaProcessor?.type(m.ref!).getFormattedTypeName(this.typeFormatter) || this.typeFormatter.formatTypeName(m.ref!.name)) : []
-		let extendsClause = '';
-		if (this.format === OutputFormat.NESTJS && extendsTypes.length > 1) {
-			extendsClause = `IntersectionType(${extendsTypes.join(', ')})`
-		} else if (extendsTypes.length > 0) {
-			//TODO: Handle multiple extends for type-graphql
-			extendsClause = extendsTypes[0] as string
+		let extendsClause: string|undefined;
+		if (this.format === OutputFormat.NESTJS && extendsTypes.length > 0) {
+			if (extendsTypes.length > 1) {
+				extendsClause = `IntersectionType(${extendsTypes.join(', ')})`
+			} else if (extendsTypes.length === 1) {
+				extendsClause = extendsTypes[0] as string
+			}
 		}
 
 		const classDeclaration = this.sourceFile.addClass({
@@ -121,6 +123,37 @@ export class TypeScriptASTFactory {
 					},
 				],
 			})
+		}
+
+		if (extendsTypes.length > 0 && this.format === OutputFormat.TYPE_GRAPHQL) {
+			for (const mixin of mixins) {
+				mixin.ref?.fields.map(field => {
+					const fieldConfig = this.schemaProcessor?.field(mixin.ref!, field.name)
+					if (!fieldConfig) {
+						throw new PluginError(`Unsupported field in mixin: ${field.name}`, ErrorCategory.SCHEMA, { field: field.name })
+					}
+					const graphqlType = this.typeMapper && this.typeMapper.mapFieldType(field)
+					if (!graphqlType) {
+						throw new PluginError(`Unsupported field type: ${field.type}`, ErrorCategory.SCHEMA, { field: field.name, type: field.type })
+					}
+					const tsType = this.mapGraphQLTypeToTS(graphqlType)
+					const isRequired = graphqlType.includes('!')
+					const isNullable = !isRequired
+
+					classDeclaration.addProperty({
+						name: field.name,
+						type: tsType,
+						hasQuestionToken: isNullable,
+						hasExclamationToken: isRequired,
+						decorators: [
+							{
+								name: 'Field',
+								arguments: this.getSimpleFieldDecoratorArgs(fieldConfig.isId() ? 'ID' : graphqlType, isNullable),
+							},
+						],
+					})
+				});
+			}
 		}
 
 		return classDeclaration

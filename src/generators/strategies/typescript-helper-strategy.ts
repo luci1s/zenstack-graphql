@@ -1,14 +1,15 @@
-import { ModelHelper, HelperGenerationContext } from '@generators/unified/unified-helper-generator'
-import { CONNECTION_BUILDER_TEMPLATE, MODEL_CONNECTION_METHOD_TEMPLATE } from '@utils/helper-templates/connection-builder.template'
-import { FILTER_BUILDER_TEMPLATE, MODEL_FILTER_METHOD_TEMPLATE } from '@utils/helper-templates/filter-builder.template'
-import { SORT_BUILDER_TEMPLATE, MODEL_SORT_METHOD_TEMPLATE } from '@utils/helper-templates/sort-builder.template'
+import { ModelHelper, HelperGenerationContext } from '../unified/unified-helper-generator.js'
+import { CONNECTION_BUILDER_TEMPLATE, MODEL_CONNECTION_METHOD_TEMPLATE } from '../../utils/helper-templates/connection-builder.template.js'
+import { FILTER_BUILDER_TEMPLATE, MODEL_FILTER_METHOD_TEMPLATE } from '../../utils/helper-templates/filter-builder.template.js'
+import { SORT_BUILDER_TEMPLATE, MODEL_SORT_METHOD_TEMPLATE } from '../../utils/helper-templates/sort-builder.template.js'
 import {
 	FIELD_SELECTION_TEMPLATE,
 	MODEL_FIELD_SELECTION_METHOD_TEMPLATE,
 	INCLUDES_TEMPLATE,
 	MODEL_INCLUDE_TEMPLATE,
 	RELATION_INCLUDE_TEMPLATE,
-} from '@utils/helper-templates/field-selection.template'
+} from '../../utils/helper-templates/field-selection.template.js'
+import { OutputFormat } from '../../utils/index.js'
 
 export class TypeScriptHelperStrategy {
 	generateHelpers(helpers: ModelHelper[], context: HelperGenerationContext): string[] {
@@ -247,6 +248,9 @@ export interface ConnectionConfig {
 	}
 
 	private getSchemaImportPath(context: HelperGenerationContext): string {
-		return './schema'
+		if (context.outputFormat === OutputFormat.GRAPHQL) {
+			return context.output
+		}
+		return context.output.split('.ts')[0] as string
 	}
 }

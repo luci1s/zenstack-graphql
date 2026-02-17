@@ -1,4 +1,4 @@
-import { DataModel, isAbstractDeclaration, TypeDef } from '@zenstackhq/sdk/ast'
+import { DataModel, TypeDef } from '@zenstackhq/sdk/ast'
 import { handleError } from '../../utils/error.js'
 import { OutputStrategy, UnifiedGeneratorContext } from '../strategies/index.js'
 import { TypeFormatter } from '../../utils/schema/type-formatter.js'
@@ -102,6 +102,6 @@ export abstract class UnifiedGeneratorBase {
 	}
 
 	protected forEachValidModel(callback: (model: DataModel) => void): void {
-		this.models.filter((model) => !model.isAbstract && !this.shouldSkipModel(model)).forEach(callback)
+		this.models.filter((model) => !this.shouldSkipModel(model)).forEach(callback)
 	}
 }

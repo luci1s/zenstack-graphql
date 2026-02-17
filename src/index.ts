@@ -1,40 +1,21 @@
 import 'reflect-metadata'
 
-export * from '@generators'
+export * from './generators/index.js'
 
-import type { PluginOptions as SdkPluginOptions } from '@zenstackhq/sdk'
-import { DataModel, Enum, isDataModel, isEnum, type Model } from '@zenstackhq/sdk/ast'
-import { ErrorCategory, PluginError } from '@utils/error'
-import { validateOptions, PluginOptions } from '@utils/config'
-import { GeneratorOrchestrator, OutputWriter } from '@orchestrator'
-import { BaseGeneratorContext, PluginMetadata } from '@core/types'
-
-export const name = 'ZenStack GraphQL'
-export const description = 'Generates GraphQL schemas'
-
-export default async function run(model: Model, options: SdkPluginOptions): Promise<{ metadata: PluginMetadata }> {
-	validateModel(model)
-
-	try {
-		const normalizedOptions = validateOptions(options as PluginOptions)
-		const context = createGeneratorContext(model, normalizedOptions)
-
-		const orchestrator = new GeneratorOrchestrator(context, normalizedOptions.outputFormat)
-		const result = await orchestrator.generate()
-
-		const outputWriter = new OutputWriter()
-		const outputPath = await outputWriter.write(result, normalizedOptions.output)
-
-		return {
-			metadata: {
-				stats: result.stats,
-				outputPath,
-			},
-		}
-	} catch (error) {
-		handleGenerationError(error)
-	}
-}
+import type { CliPlugin } from '@zenstackhq/sdk'
+import {
+	DataModel,
+	Enum,
+	isDataModel,
+	isEnum,
+	isTypeDef,
+	type Model,
+	TypeDef,
+} from '@zenstackhq/sdk/ast'
+import { ErrorCategory, PluginError } from './utils/error.js'
+import { validateOptions, PluginOptions } from './utils/config.js'
+import { GeneratorOrchestrator, OutputWriter } from './orchestrator/index.js'
+import { BaseGeneratorContext } from './core/types.js'
 
 function validateModel(model: Model): void {
 	if (!model) {
@@ -50,13 +31,15 @@ function validateModel(model: Model): void {
 }
 
 function createGeneratorContext(model: Model, normalizedOptions: ReturnType<typeof validateOptions>): BaseGeneratorContext {
-	const models = model.declarations.filter((x) => isDataModel(x) && !x.isAbstract) as DataModel[]
+	const models = model.declarations.filter((x) => isDataModel(x)) as DataModel[]
 	const enums = model.declarations.filter((x) => isEnum(x)) as Enum[]
+	const types = model.declarations.filter((x) => isTypeDef(x)) as TypeDef[]
 
 	return {
 		options: normalizedOptions,
 		models,
 		enums,
+		types,
 	}
 }
 
@@ -77,3 +60,28 @@ function handleGenerationError(error: unknown): never {
 		'Ensure all required models and fields are properly defined',
 	])
 }
+
+const cliPlugin: CliPlugin = {
+	name: 'ZenStack GraphQL',
+
+	statusText: 'Generating GraphQL schema...',
+
+	async generate({ model, pluginOptions }) {
+		validateModel(model)
+
+		try {
+			const normalizedOptions = validateOptions(pluginOptions as PluginOptions)
+			const context = createGeneratorContext(model, normalizedOptions)
+
+			const orchestrator = new GeneratorOrchestrator(context, normalizedOptions.outputFormat)
+			const result = await orchestrator.generate()
+
+			const outputWriter = new OutputWriter()
+			await outputWriter.write(result, normalizedOptions.output)
+		} catch (error) {
+			handleGenerationError(error)
+		}
+	},
+}
+
+export default cliPlugin;
